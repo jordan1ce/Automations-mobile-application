@@ -22,9 +22,10 @@ public class FirstTest {
         capabilitis.setCapability("automationName", "Appium");
         capabilitis.setCapability("appPackage", "org.wikipedia");
         capabilitis.setCapability("appActivity", ".main.MainActivity");
-        capabilitis.setCapability("app", "C:\\Users\\Dmitrii\\Desktop\\Моя\\javaAppiumAutomation\\apks\\org.wikipedia.apk");
+        capabilitis.setCapability("app", "C:\\Users\\Dmitrii\\Desktop\\Моя\\Automations-mobile-application\\javaAppiumAutomation\\apks\\org.wikipedia.apk");
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilitis);
     }
+
     @After
     public void tearDown() {
         driver.quit();
