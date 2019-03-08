@@ -43,15 +43,19 @@ public class FirstTest {
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find 'Search Wikipedia' input",
                 5);
+
+        String searchingWord = "Java";
+        //Сделал доп. переменную для проверки поиска. Можно указать допустим "ipt" и посмотреть, в каких статья нет свопадений
+        String wordInArticles = "Java";
+
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text, 'Search…')]"),
-                "Java",
+                searchingWord,
                 "Cannot find search input",
                 5);
 
         // Определяем кол-во найденных элементов на страницы по айди: org.wikipedia:id/page_list_item_title
         List<WebElement> elements = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
-        System.out.println("Number of elements:" +elements.size());
 
         //Создаем массив типа String, куда будем записывать все элементы параметра "text"
         String[] text = new String[elements.size()];
@@ -59,16 +63,38 @@ public class FirstTest {
             text[i] = elements.get(i).getAttribute("text");
         }
 
-        //Иследуем массив "text" на наличие слово "Java". Результат совпадений записываем в javaElements
+        //Иследуем массив "text" на наличие слово "Java". Результат совпадений записываем в javaElements,
+        // если есть совпадение. И в javaElementsNotFound, если их нет.
         int javaElements = 0;
+        int javaElementsNotFound = 0;
         for (int i = 0; i < text.length; i++) {
-            if (text[i].contains("Java")) {
+            if (text[i].contains(wordInArticles)) {
                 javaElements++;
+            }
+            else javaElementsNotFound++;
+        }
+        //Определяем, в каких статьях мы не нашли слово Java и записываем их в новый массив
+        int position = 0;
+        String [] textNotfound = new String[javaElementsNotFound];
+        for (int i = 0; i < text.length; i++){
+            if (text[i].contains(wordInArticles));
+            else {
+                textNotfound[position] = text[i];
+                position++;
             }
         }
 
+        //Создаю переменную, куда записываю строки без совпадений
+        String strokaElementov = "";
+        int positionOfArticles = 1;
+
+        for (int i = 0; i < textNotfound.length; i++){
+           if (i < textNotfound.length-1) strokaElementov = strokaElementov + positionOfArticles++ + " фраза: " + textNotfound[i] + ", ";
+           else strokaElementov = strokaElementov + positionOfArticles++ + " фраза: " + textNotfound[i] + ".";
+        }
+
         //Сравниваем кол-во найденных элементов (elements) с кол-во совпадений по Java (javaElements)
-        Assert.assertFalse("The search world not find in all articles", elements.size() != javaElements);
+        Assert.assertFalse("The search world " + searchingWord + " " + "not find in articles: " + strokaElementov + "", elements.size() != javaElements);
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
