@@ -1,13 +1,14 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
+import lib.Platform;
 
-public class MyListPageObject extends MainPageObject {
+abstract public class MyListPageObject extends MainPageObject {
 
-    private static final String
-            FOLDER_BY_NAME_TPL = "xpath://*[@text = '{FOLDER_NAME}']",
-            ARTICLE_BY_TITLE_TPL = "xpath://*[@text = '{TITLE}']";
+    protected static String
+            FOLDER_BY_NAME_TPL,
+            ARTICLE_BY_TITLE_TPL,
+            CLOSE_AUTH_BUTTON;
 
     private static String getFolderXpathByName(String name_of_folder){
         return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}", name_of_folder);
@@ -25,8 +26,8 @@ public class MyListPageObject extends MainPageObject {
         String folder_name_xpath = getFolderXpathByName(name_of_folder);
         this.waitForElementAndClick(
                 folder_name_xpath,
-                "Cannot find find folder by name " + name_of_folder,
-                2
+                "Cannot find folder by name " + name_of_folder,
+                15
         );
     }
 
@@ -49,5 +50,12 @@ public class MyListPageObject extends MainPageObject {
                 "Cannot find save article"
         );
         this.waitForArticleLeftToDisappearByTitle(article_xpath);
+
+        if(Platform.getInstance().isIos()){
+            this.clickElementToTheRightUpperCorner(article_xpath, "Cannot find saved article");
+        }
+    }
+    public void clickAuthCloseButton(){
+        this.waitForElementAndClick(CLOSE_AUTH_BUTTON, "Cannot find auth close button", 5);
     }
 }
