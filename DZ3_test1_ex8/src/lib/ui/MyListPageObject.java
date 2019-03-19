@@ -65,11 +65,6 @@ abstract public class MyListPageObject extends MainPageObject {
         this.waitForElementAndClick(CLOSE_AUTH_BUTTON, "Cannot find auth close button", 5);
     }
 
-    public void waitForSearchResult(String substring){
-        String search_result_xpath = getSaveArticleXpathByTitle(substring);
-        this.waitForElementPresent(search_result_xpath, "Cannot find search result with substring " + substring, 5);
-        }
-
 
     public int getAmountsOfElements(String locator){
         By by = this.getLocatorByString(locator);

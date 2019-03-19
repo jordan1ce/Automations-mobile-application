@@ -2,9 +2,7 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
-import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -53,53 +51,6 @@ public class MainPageObject {
         element.clear();
         return element;
     }
-    public void swipeUp (int timeOfSwipe) {
-        TouchAction action = new TouchAction(driver);
-        Dimension size = driver.manage().window().getSize();
-        int x = size.width / 2;
-        int start_y = (int) (size.height * 0.8);
-        int end_y = (int) (size.height * 0.2);
-
-        action.press(x, start_y)
-                .waitAction(timeOfSwipe)
-                .moveTo(x, end_y)
-                .release()
-                .perform();
-    }
-    public void swipeUpQuick(){
-        swipeUp(200);
-    }
-    public void swipeUpToFindElement(String locator, String error_message, int max_swipe){
-        int already_swiped = 0;
-        By by = this.getLocatorByString(locator);
-        while (driver.findElements(by).size() == 0) {
-
-            if (already_swiped > max_swipe) {
-                waitForElementPresent(locator, "Cannot find element by swiping up. \n" + error_message, 0);
-                return;
-            }
-            swipeUpQuick();
-            already_swiped++;
-        }
-    }
-
-    public void swipeUpTitleElementAppear(String locator, String error_message, int max_swipes){
-        int already_swiped = 0;
-        while (this.isElementLocatorOnTheScreen(locator)){
-            if(already_swiped > max_swipes){
-                Assert.assertTrue(error_message, this.isElementLocatorOnTheScreen(locator));
-            }
-            swipeUpQuick();
-            ++already_swiped;
-        }
-    }
-
-    public boolean isElementLocatorOnTheScreen(String locator){
-
-        int element_location_by_y = this.waitForElementPresent(locator, "Cannot find element by locator", 15).getLocation().getY();
-        int screen_size_by_y = driver.manage().window().getSize().getHeight();
-        return element_location_by_y < screen_size_by_y;
-    }
 
     public void clickElementToTheRightUpperCorner(String locator, String error_message){
 
@@ -143,18 +94,6 @@ public class MainPageObject {
         By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         return elements.size();
-    }
-    public void assertElementNotPresent(String locator, String error_message){
-
-        int amount_of_elements = getAmountsOfElements(locator);
-        if (amount_of_elements > 0) {
-            String default_message = "An element '" + locator + "' supposed to be not present";
-            throw new AssertionError(default_message + " " + error_message);
-        }
-    }
-    public String waitForElementAndGetAttribute(String locator, String attribute, String error_message, long timeOutInSeconds){
-        WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
-        return element.getAttribute(attribute);
     }
 
     private By getLocatorByString(String locator_with_type){

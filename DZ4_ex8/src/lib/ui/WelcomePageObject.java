@@ -2,7 +2,7 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class WelcomePageObject extends MainPageObject{
+public class WelcomePageObject extends MainPageObject {
 
     private static final String SKIP = "id:Skip";
 
